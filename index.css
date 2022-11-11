@@ -69,6 +69,7 @@ main {
 
 .order-separator {
   border: 1px solid black;
+  margin-top: 10px;
 }
 
 .total-price {
@@ -81,6 +82,11 @@ main {
   justify-content: flex-start;
 }
 
+.item-list h3,
+h4 {
+  margin: 5px;
+}
+
 .item-price {
   display: flex;
   justify-content: space-between;
@@ -89,8 +95,16 @@ main {
   margin-left: 10px;
 }
 
-.remove-item-btn {
+#remove-item-btn {
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block;
 }
