@@ -2,6 +2,8 @@ import { menuArray } from "./data.js";
 
 const totalPriceEl = document.getElementById("total-price");
 const cartEl = document.getElementById("cart");
+const checkoutModalEl = document.getElementById("checkout-modal");
+const name = document.getElementById("name");
 
 let cart = [];
 let totalPrice = 0;
@@ -37,7 +39,7 @@ function addItem(id) {
   totalPrice += targetItemObj.price;
   totalPriceEl.textContent = `$${totalPrice}`;
 
-  renderCheckout();
+  renderOrderItem();
 }
 
 function removeItem(id) {
@@ -50,7 +52,7 @@ function removeItem(id) {
 
   if (targetItemObj.quantity >= 1) {
     targetItemObj.quantity--;
-    renderCheckout();
+    renderOrderItem();
   } else {
     cart.splice(itemIndex, 1);
   }
@@ -88,7 +90,7 @@ function getMenu() {
   return container;
 }
 
-function renderCheckout() {
+function renderOrderItem() {
   let cartHtml = ``;
 
   cart.forEach((item) => {
@@ -107,23 +109,24 @@ function renderCheckout() {
 }
 
 function openModal() {
-  document.getElementById("checkout-modal").style.display = "block";
+  checkoutModalEl.style.display = "block";
 }
 
 function handlePayForm() {
-  const name = document.getElementById("name").value;
   const cardNum = document.getElementById("card-number").value;
   const cardCvv = document.getElementById("card-cvv").value;
 
-  if (!name && !cardNum && !cardCvv) {
-    console.log("empty form");
+  if (name.value != "" && cardNum != "" && cardCvv != "") {
+    thanksMsg();
+    checkoutModalEl.style.display = "none";
+    cart = [];
   }
 }
 
 function thanksMsg() {
   let cartHtml = `
-  <div>
-    <h1>Thanks for your order!</h1>
+  <div class="thanks-msg">
+    <h1>Thanks ${name.value}, for your order!</h1>
   </div>
   `;
 
