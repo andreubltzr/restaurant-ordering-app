@@ -1,5 +1,8 @@
 import { menuArray } from "./data.js";
 
+const totalPriceEl = document.getElementById("total-price");
+const cartEl = document.getElementById("cart");
+
 let cart = [];
 let totalPrice = 0;
 
@@ -14,15 +17,18 @@ document.addEventListener("click", (e) => {
 });
 
 function addItem(id) {
-  document.getElementById("cart").classList.add("show");
+  cartEl.classList.add("show");
   const targetItemObj = menuArray.filter((item) => {
     return item.id == id;
   })[0];
 
   cart.push(targetItemObj);
+
   targetItemObj.quantity++;
+
   totalPrice += targetItemObj.price;
-  document.getElementById("total-price").textContent = `$${totalPrice}`;
+  totalPriceEl.textContent = `$${totalPrice}`;
+
   renderCheckout();
 }
 
@@ -42,10 +48,10 @@ function removeItem(id) {
   }
 
   totalPrice -= targetItemObj.price;
-  document.getElementById("total-price").textContent = `$${totalPrice}`;
+  totalPriceEl.textContent = `$${totalPrice}`;
 
   if (!cart.length) {
-    document.getElementById("cart").classList.remove("show");
+    cartEl.classList.remove("show");
   }
 }
 
