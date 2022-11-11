@@ -7,12 +7,20 @@ let cart = [];
 let totalPrice = 0;
 
 document.addEventListener("click", (e) => {
-  let target = e.target.dataset;
+  let targetDataset = e.target.dataset;
+  let target = e.target;
 
-  if (target.add) {
-    addItem(target.add);
-  } else if (target.remove) {
-    removeItem(target.remove);
+  if (targetDataset.add) {
+    addItem(targetDataset.add);
+  } else if (targetDataset.remove) {
+    removeItem(targetDataset.remove);
+  } else if (target.id === "complete-order-btn") {
+    openModal();
+  } else if (target.id === "close-modal-btn") {
+    document.getElementById("checkout-modal").style.display = "none";
+  } else if (target.id === "pay-btn") {
+    e.preventDefault();
+    handlePayForm();
   }
 });
 
@@ -96,6 +104,30 @@ function renderCheckout() {
   });
 
   document.getElementById("order-list").innerHTML = cartHtml;
+}
+
+function openModal() {
+  document.getElementById("checkout-modal").style.display = "block";
+}
+
+function handlePayForm() {
+  const name = document.getElementById("name").value;
+  const cardNum = document.getElementById("card-number").value;
+  const cardCvv = document.getElementById("card-cvv").value;
+
+  if (!name && !cardNum && !cardCvv) {
+    console.log("empty form");
+  }
+}
+
+function thanksMsg() {
+  let cartHtml = `
+  <div>
+    <h1>Thanks for your order!</h1>
+  </div>
+  `;
+
+  document.getElementById("cart").innerHTML = cartHtml;
 }
 
 function render() {

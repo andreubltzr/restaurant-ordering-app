@@ -41,5 +41,22 @@
         </div>
       </section>
     </main>
+    <div id="checkout-modal">
+      <div id="close-modal">
+        <button id="close-modal-btn">X</button>
+      </div>
+      <form>
+        <h3>Enter card details</h3>
+        <input type="text" id="name" placeholder="Enter your name" required />
+        <input
+          type="text"
+          id="card-number"
+          placeholder="Enter card number"
+          required
+        />
+        <input type="text" id="card-cvv" placeholder="Enter CVV" required />
+        <input type="submit" id="pay-btn" value="Pay" required />
+      </form>
+    </div>
   </body>
 </html>
