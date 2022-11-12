@@ -1,6 +1,5 @@
 import { menuArray } from "./data.js";
 
-const totalPriceEl = document.getElementById("total-price");
 const cartEl = document.getElementById("cart");
 const checkoutModalEl = document.getElementById("checkout-modal");
 const name = document.getElementById("name");
@@ -27,19 +26,25 @@ document.addEventListener("click", (e) => {
 });
 
 function addItem(id) {
-  cartEl.classList.add("show");
   const targetItemObj = menuArray.filter((item) => {
     return item.id == id;
   })[0];
 
-  cart.push(targetItemObj);
+  if (!cart.includes(targetItemObj)) {
+    cart.push(targetItemObj);
+  }
 
-  targetItemObj.quantity++;
+  cart.forEach((item) => {
+    if (item.id === targetItemObj.id) {
+      item.quantity++;
+    }
+  });
 
   totalPrice += targetItemObj.price;
-  totalPriceEl.textContent = `$${totalPrice}`;
 
-  renderOrderItem();
+  cartEl.classList.add("show");
+
+  renderCart();
 }
 
 function removeItem(id) {
@@ -47,29 +52,30 @@ function removeItem(id) {
     return item.id == id;
   })[0];
 
-  let itemIndex = cart.indexOf(targetItemObj);
-  cart.splice(itemIndex, 1);
+  cart.forEach((item, idx) => {
+    if (item.id === targetItemObj.id) {
+      item.quantity--;
+    }
 
-  if (targetItemObj.quantity >= 1) {
-    targetItemObj.quantity--;
-    renderOrderItem();
-  } else {
-    cart.splice(itemIndex, 1);
+    if (item.quantity === 0) {
+      cart.splice(idx, 1);
+    }
+  });
+
+  if (cart.length === 0) {
+    cartEl.classList.remove("show");
   }
 
   totalPrice -= targetItemObj.price;
-  totalPriceEl.textContent = `$${totalPrice}`;
 
-  if (!cart.length) {
-    cartEl.classList.remove("show");
-  }
+  renderCart();
 }
 
-function getMenu() {
-  let container = ``;
+function getMenuHtml() {
+  let menuHtml = ``;
 
   menuArray.forEach((item) => {
-    container += `
+    menuHtml += `
     <section class="menu" id="${item.id}">
         <div class="menu-item">
             <p class="emoji-item">${item.emoji}</p>
@@ -87,25 +93,47 @@ function getMenu() {
   `;
   });
 
-  return container;
+  return menuHtml;
 }
 
 function renderOrderItem() {
-  let cartHtml = ``;
-
+  let getCartHtml = ``;
   cart.forEach((item) => {
-    cartHtml += `
-        <div class="item-list" id="item-list">
-            <h3>${item.name}</h3>
+    getCartHtml += `
+        <div class="item-list" id="item-list">  
+                <div class="item-info">
+                  <h3>${item.name}</h3>
+                  <h4 id="item-qty">x${item.quantity}</h4>
+                  <button id="remove-item-btn" data-remove="${
+                    item.id
+                  }">remove</button>
+                </div>
             <div class="item-price">
-                <button id="remove-item-btn" data-remove="${item.id}">remove</button>
-                <h4>$${item.price}</h4>
+                <h4>$${item.price * item.quantity}</h4>
             </div>
         </div>
     `;
   });
 
-  document.getElementById("order-list").innerHTML = cartHtml;
+  let cartSectionHtml = ``;
+  cart.forEach(() => {
+    cartSectionHtml = `
+    <div id="items-ordered">
+    <div>
+    <h3 id="order-title">Your order</h3>
+    </div>
+    <div id="order-list">${getCartHtml}</div>
+    <div class="order-separator"></div>
+    <div class="total-price">
+    <div><p>Total price:</p></div>
+      <div><p id="total-price">$${totalPrice}</p></div>
+      </div>
+      <button id="complete-order-btn">Complete order</button>
+      </div>
+      `;
+  });
+
+  return cartSectionHtml;
 }
 
 function openModal() {
@@ -119,8 +147,12 @@ function handlePayForm() {
   if (name.value != "" && cardNum != "" && cardCvv != "") {
     thanksMsg();
     checkoutModalEl.style.display = "none";
-    cart = [];
   }
+  cart.forEach((item) => {
+    item.quantity = 0;
+  });
+  cart = [];
+  totalPrice = 0;
 }
 
 function thanksMsg() {
@@ -134,7 +166,11 @@ function thanksMsg() {
 }
 
 function render() {
-  document.getElementById("main").innerHTML = getMenu();
+  document.getElementById("main").innerHTML = getMenuHtml();
+}
+
+function renderCart() {
+  cartEl.innerHTML = renderOrderItem();
 }
 
 render();

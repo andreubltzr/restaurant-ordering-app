@@ -5,7 +5,7 @@ body {
   margin: 0;
   width: 600px;
   margin: 0 auto;
-  background-color: rgb(68, 68, 68);
+  background-color: white;
 }
 
 header {
@@ -79,7 +79,12 @@ main {
 
 .item-list {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-info {
+  display: flex;
 }
 
 .item-list h3,
@@ -88,11 +93,11 @@ h4 {
 }
 
 .item-price {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-left: 10px;
+  margin-left: auto;
+}
+
+#total-price {
+  font-weight: 900;
 }
 
 #remove-item-btn {
